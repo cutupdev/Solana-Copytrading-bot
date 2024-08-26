@@ -2,13 +2,45 @@
 import React, { ChangeEvent, EventHandler, useState } from 'react';
 
 import type { FormProps, InputNumberProps } from 'antd';
-import { InputNumber, Switch } from 'antd';
+import { InputNumber, Switch, Table } from 'antd';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 import { PublicKey } from '@solana/web3.js';
+import { post } from '../config';
 
 let countTimer: any;
 
+const dataSource = [
+    {
+        key: '1',
+        name: 'Mike',
+        age: 32,
+        address: '10 Downing Street',
+    },
+    {
+        key: '2',
+        name: 'John',
+        age: 42,
+        address: '10 Downing Street',
+    },
+];
 
+const columns = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: 'Age',
+        dataIndex: 'age',
+        key: 'age',
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+    },
+];
 
 
 const RaydiumSniping = () => {
@@ -41,21 +73,24 @@ const RaydiumSniping = () => {
         }, 300)
     }
 
-    const onAllBuyChange = (checked: boolean) => {
-        setDidAllBuy(checked);
-    };
-
     const onChangeNumber: InputNumberProps['onChange'] = (value) => {
         // @ts-ignore
         setBuyAmount(parseFloat(value))
     }
 
-    const startProcess = () => {
-        if(!didAllBuy) if(tokenAddr == "" || tokenAddr == null) {
+    const startProcess = async () => {
+        if (!didAllBuy) if (tokenAddr == "" || tokenAddr == null) {
             message.error("Input sAddress")
             return
         }
+
+        await post("/snipingbot/raydium/startbot", {
+            tokenAddr: tokenAddr,
+            buyAmount: buyAmount
+        })
+
     }
+
     return (
         <>
             <h1>Raydium Sniping Bot</h1>
@@ -70,10 +105,12 @@ const RaydiumSniping = () => {
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Buy All New Token"
+                    label="Buy All"
                     name="did_all_token_buy"
                 >
-                    <Switch defaultChecked onChange={onAllBuyChange} />
+                    <Switch defaultChecked onChange={(checked: boolean) => {
+                        setDidAllBuy(checked);
+                    }} />
                 </Form.Item>
 
 
@@ -106,7 +143,9 @@ const RaydiumSniping = () => {
                         Process
                     </Button>
                 </Form.Item>
+
             </Form>
+            <Table dataSource={dataSource} columns={columns} />;
         </>
     )
 }
