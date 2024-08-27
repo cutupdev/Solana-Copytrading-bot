@@ -205,7 +205,7 @@ const RaydiumSniping = () => {
                         style={{ width: 200 }}
                         defaultValue="0.002"
                         min="0.002"
-                        max="0.1"
+                        max="1"
                         step="0.001"
                         onChange={onChangeNumber}
                         stringMode
