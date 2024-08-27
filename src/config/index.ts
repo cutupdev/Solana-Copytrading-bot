@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const RPC = import.meta.env.VITE_MAIN_RPC
 
 const post = async (additionUrl: String, data: any) => {
     console.log(BACKEND_URL)
@@ -13,5 +14,6 @@ const get = async (additionUrl: String) => {
 
 export {
     post,
-    get
+    get,
+    RPC
 }
