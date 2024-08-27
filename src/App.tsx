@@ -25,7 +25,7 @@ const items2: MenuProps['items'] = [
         key: 1,
         label: "Raydium",
         onClick : () => {
-          window.location.href = 'snipingbot/raydium'
+          window.location.href = '/snipingbot/raydium'
         }
       },
       {

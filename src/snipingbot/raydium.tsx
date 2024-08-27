@@ -46,8 +46,8 @@ const columns = [
 const RaydiumSniping = () => {
 
     const [didAllBuy, setDidAllBuy] = useState(true)
-    const [tokenAddr, setTokenAddr] = useState(String)
-    const [buyAmount, setBuyAmount] = useState(Number)
+    const [tokenAddr, setTokenAddr] = useState('')
+    const [buyAmount, setBuyAmount] = useState(0.0001)
 
     const onFinish: FormProps['onFinish'] = (values) => {
         console.log('Success:', values);
