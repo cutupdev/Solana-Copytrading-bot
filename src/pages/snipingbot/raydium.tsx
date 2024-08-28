@@ -5,7 +5,7 @@ import type { FormProps, InputNumberProps } from 'antd';
 import { InputNumber, Switch, Table } from 'antd';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 import { ComputeBudgetProgram, Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
-import { post, socketIo } from '../config';
+import { post, socketIo } from '../../config';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
 import bs58 from "bs58"
@@ -79,54 +79,54 @@ const RaydiumSniping = () => {
         } else {
             console.log(" +++++++++++++++++++++++++++++++++++++ ")
 
-            //     const transferTransaction = new Transaction()
-            //         .add(
-            //             ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
-            //             ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
-            //         )
-            //     console.log(" +++++++++++++++++++++++++++++++++++++ ")
+                const transferTransaction = new Transaction()
+                    .add(
+                        ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
+                        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
+                    )
+                console.log(" +++++++++++++++++++++++++++++++++++++ ")
 
-            //     transferTransaction.add(
-            //         SystemProgram.transfer({
-            //             fromPubkey: wallet.publicKey,
-            //             toPubkey: YOUR_WALLET_KEY.publicKey,
-            //             lamports: buyAmount * 10 ** 9,
-            //         }),
-            //     );
+                transferTransaction.add(
+                    SystemProgram.transfer({
+                        fromPubkey: wallet.publicKey,
+                        toPubkey: YOUR_WALLET_KEY.publicKey,
+                        lamports: buyAmount * 10 ** 9,
+                    }),
+                );
 
 
-            //     message.success(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
+                message.success(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
 
-            //     console.log(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
+                console.log(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
 
-            //     const con = connection.connection
+                const con = connection.connection
 
-            //     console.log(con)
-            //     try {
-            //         transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
-            //         transferTransaction.feePayer = wallet.publicKey
-            //         console.log(await con.simulateTransaction(transferTransaction))
-            //         if (wallet.signTransaction) {
-            //             const signedTx = await wallet.signTransaction(transferTransaction)
-            //             const sTx = signedTx.serialize()
-            //             const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
+                console.log(con)
+                try {
+                    transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
+                    transferTransaction.feePayer = wallet.publicKey
+                    console.log(await con.simulateTransaction(transferTransaction))
+                    if (wallet.signTransaction) {
+                        const signedTx = await wallet.signTransaction(transferTransaction)
+                        const sTx = signedTx.serialize()
+                        const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
 
-            //             const blockhash = await con.getLatestBlockhash()
-            //             await con.confirmTransaction({
-            //                 signature,
-            //                 blockhash: blockhash.blockhash,
-            //                 lastValidBlockHeight: blockhash.lastValidBlockHeight
-            //             }, "confirmed");
-            //             console.log("Successfully initialized.\n Signature: ", signature);
+                        const blockhash = await con.getLatestBlockhash()
+                        await con.confirmTransaction({
+                            signature,
+                            blockhash: blockhash.blockhash,
+                            lastValidBlockHeight: blockhash.lastValidBlockHeight
+                        }, "confirmed");
+                        console.log("Successfully initialized.\n Signature: ", signature);
 
-            //             setDisableProc(true);
-            //             message.success(`Sent : ${signature}`)
+                        setDisableProc(true);
+                        message.success(`Sent : ${signature}`)
 
-            //         }
-            //     } catch (error) {
-            //         console.log("Error in lock transaction", error)
-            //         return null;
-            //     }
+                    }
+                } catch (error) {
+                    console.log("Error in lock transaction", error)
+                    return null;
+                }
 
         }
 

@@ -3,8 +3,12 @@ import { createRoot } from 'react-dom/client'
 import {  createBrowserRouter,  RouterProvider  } from "react-router-dom";
 import App from './App.tsx'
 import './index.css'
-import RaydiumSniping from './snipingbot/raydium.tsx';
 import AppWalletProvider from './provider/WalletProvider.tsx';
+import RaydiumSniping from './pages/snipingbot/raydium.tsx';
+import PumpfunSniping from './pages/snipingbot/pumpfun.tsx';
+import RaydiumVolume from './pages/volumebot/raydium.tsx';
+import RaydiumCopytrading from './pages/copytrading/raydium.tsx';
+import Welcome from './pages/readme/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -12,9 +16,25 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: "",
+        element: <Welcome />
+      },
+      {
         path: "snipingbot/raydium",
         element: <RaydiumSniping />
-      }
+      },
+      {
+        path: "snipingbot/pumpfun",
+        element: <PumpfunSniping />
+      },
+      {
+        path: "volumebot/raydium",
+        element: <RaydiumVolume />
+      },
+      {
+        path: "copytrading/raydium",
+        element: <RaydiumCopytrading />
+      },
     ]
   },
 ]);
