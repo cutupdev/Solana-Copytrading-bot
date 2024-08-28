@@ -10,6 +10,7 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
 import bs58 from "bs58"
 import { io } from 'socket.io-client';
+import { useSharedContext } from '../../context/SharedContext';
 
 // Make Buffer available globally in the browser environment
 if (typeof window !== 'undefined') {
@@ -59,7 +60,9 @@ const RaydiumSniping = () => {
     const [tokenAddr, setTokenAddr] = useState('')
     const [buyAmount, setBuyAmount] = useState(0.0025)
     const [txHistory, setTxHistory] = useState([])
-
+    // @ts-ignore
+    const { sharedValue, setSharedValue } = useSharedContext();
+    const { tempWalletSeckey } = sharedValue;
     socketIo.on('message', (message) => {
         //  @ts-ignore
         setTxHistory([...txHistory, message])
@@ -68,74 +71,15 @@ const RaydiumSniping = () => {
 
     const onFinish: FormProps['onFinish'] = async (values) => {
         if (!didAllBuy) if (tokenAddr == "" || tokenAddr == null) {
-            message.error("Input sAddress")
+            message.error("Input TokenAddress")
             return
         }
 
-        const YOUR_WALLET_KEY = Keypair.generate()
-
-        if (wallet.publicKey == null) {
-            message.error("Connect Wallet")
-        } else {
-            console.log(" +++++++++++++++++++++++++++++++++++++ ")
-
-                const transferTransaction = new Transaction()
-                    .add(
-                        ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
-                        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
-                    )
-                console.log(" +++++++++++++++++++++++++++++++++++++ ")
-
-                transferTransaction.add(
-                    SystemProgram.transfer({
-                        fromPubkey: wallet.publicKey,
-                        toPubkey: YOUR_WALLET_KEY.publicKey,
-                        lamports: buyAmount * 10 ** 9,
-                    }),
-                );
-
-
-                message.success(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
-
-                console.log(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
-
-                const con = connection.connection
-
-                console.log(con)
-                try {
-                    transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
-                    transferTransaction.feePayer = wallet.publicKey
-                    console.log(await con.simulateTransaction(transferTransaction))
-                    if (wallet.signTransaction) {
-                        const signedTx = await wallet.signTransaction(transferTransaction)
-                        const sTx = signedTx.serialize()
-                        const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
-
-                        const blockhash = await con.getLatestBlockhash()
-                        await con.confirmTransaction({
-                            signature,
-                            blockhash: blockhash.blockhash,
-                            lastValidBlockHeight: blockhash.lastValidBlockHeight
-                        }, "confirmed");
-                        console.log("Successfully initialized.\n Signature: ", signature);
-
-                        setDisableProc(true);
-                        message.success(`Sent : ${signature}`)
-
-                    }
-                } catch (error) {
-                    console.log("Error in lock transaction", error)
-                    return null;
-                }
-
-        }
-
-        console.log(YOUR_WALLET_KEY.secretKey.toString())
 
         const data = await post("/snipingbot/raydium/startbot", {
             tokenAddr: tokenAddr,
             buyAmount: buyAmount,
-            tempWalletKey: bs58.encode(YOUR_WALLET_KEY.secretKey)
+            tempWalletKey: tempWalletSeckey
         })
 
         console.log("return value : ", data)
@@ -197,7 +141,7 @@ const RaydiumSniping = () => {
                 </Form.Item>
 
                 <Form.Item
-                    label="TokenAddress"
+                    label="Amount (SOL)"
                     name="buy_amount"
                 >
                     <InputNumber<string>
@@ -220,7 +164,7 @@ const RaydiumSniping = () => {
                 </Form.Item>
 
             </Form>
-            <Table dataSource={txHistory.map((ele , idx) => {})} columns={columns} />;
+            <Table dataSource={txHistory.map((ele, idx) => { })} columns={columns} />;
         </>
     )
 }

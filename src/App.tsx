@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { Outlet } from 'react-router-dom';
 import HeaderComponents from './components/Header';
+import { SharedProvider } from './context/SharedContext';
 // import Header from './components/Header'
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -15,6 +16,9 @@ const { Header, Content, Footer, Sider } = Layout;
 //   }
 // ]
 
+
+
+
 const items2: MenuProps['items'] = [
   {
     key: 0,
@@ -24,14 +28,14 @@ const items2: MenuProps['items'] = [
       {
         key: 1,
         label: "Raydium",
-        onClick : () => {
+        onClick: () => {
           window.location.href = '/snipingbot/raydium'
         }
       },
       {
         key: 2,
         label: "Pumpfun",
-        onClick : () => {
+        onClick: () => {
           window.location.href = '/snipingbot/pumpfun'
         }
       },
@@ -46,7 +50,7 @@ const items2: MenuProps['items'] = [
       {
         key: 4,
         label: "Raydium",
-        onClick : () => {
+        onClick: () => {
           window.location.href = '/volumebot/raydium'
         }
       }
@@ -61,11 +65,19 @@ const items2: MenuProps['items'] = [
       {
         key: 6,
         label: "Raydium",
-        onClick : () => {
+        onClick: () => {
           window.location.href = '/copytrading/raydium'
         }
       }
     ],
+  },
+  {
+    key: 7,
+    icon: <UserOutlined />,
+    label: "User Info",
+    onClick: () => {
+      window.location.href = '/userinfo'
+    }
   },
 ]
 
@@ -74,14 +86,14 @@ const App: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  
-
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ display: 'flex', alignItems: 'center' , justifyContent : "space-between" }}>
-        <HeaderComponents />
-          
-        {/* <div className="demo-logo" />
+    <SharedProvider>
+
+      <Layout style={{ minHeight: '100vh' }}>
+        <Header style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
+          <HeaderComponents />
+
+          {/* <div className="demo-logo" />
         <Menu
           theme="dark"
           mode="horizontal"
@@ -89,29 +101,31 @@ const App: React.FC = () => {
           items={items1}
           style={{ flex: 1, minWidth: 0 }}
         /> */}
-      </Header>
-      <Content style={{ padding: '48px 30px 0px 48px ' }}>
-        <Layout
-          style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
-        >
-          <Sider style={{ background: colorBgContainer }} width={200}>
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              style={{ height: '100%' }}
-              items={items2}
-            />
-          </Sider>
-          <Content style={{ padding: '0 24px', minHeight: 280 }}>{
-            <Outlet />
-          }</Content>
-        </Layout>
-      </Content>
-      <Footer style={{ textAlign: 'center' }}>
-        Bot Pad - Beta ©{new Date().getFullYear()} Created by Solkeen
-      </Footer>
-    </Layout>
+        </Header>
+        <Content style={{ padding: '48px 30px 0px 48px ' }}>
+          <Layout
+            style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+          >
+            <Sider style={{ background: colorBgContainer }} width={200}>
+              <Menu
+                mode="inline"
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                style={{ height: '100%' }}
+                items={items2}
+              />
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>{
+              <Outlet />
+            }</Content>
+          </Layout>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>
+          Bot Pad - Beta ©{new Date().getFullYear()} Created by Solkeen
+        </Footer>
+      </Layout>
+
+    </SharedProvider>
   );
 };
 
