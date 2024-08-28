@@ -10,10 +10,6 @@ import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { RPC } from "../config";
 
-
-
-console.log(RPC)
-
 export default function AppWalletProvider({
   children,
 }: {

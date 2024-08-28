@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
@@ -30,7 +30,10 @@ const items2: MenuProps['items'] = [
       },
       {
         key: 2,
-        label: "Pumpfun"
+        label: "Pumpfun",
+        onClick : () => {
+          window.location.href = '/snipingbot/pumpfun'
+        }
       },
     ],
   },
@@ -42,7 +45,10 @@ const items2: MenuProps['items'] = [
     children: [
       {
         key: 4,
-        label: "Raydium"
+        label: "Raydium",
+        onClick : () => {
+          window.location.href = '/volumebot/raydium'
+        }
       }
     ],
   },
@@ -55,6 +61,9 @@ const items2: MenuProps['items'] = [
       {
         key: 6,
         label: "Raydium",
+        onClick : () => {
+          window.location.href = '/copytrading/raydium'
+        }
       }
     ],
   },
@@ -64,6 +73,8 @@ const App: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -98,7 +109,7 @@ const App: React.FC = () => {
         </Layout>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        Bot Pad - Beta ©{new Date().getFullYear()} Created by Solkeen
       </Footer>
     </Layout>
   );

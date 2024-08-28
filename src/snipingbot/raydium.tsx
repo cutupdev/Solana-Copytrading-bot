@@ -5,10 +5,11 @@ import type { FormProps, InputNumberProps } from 'antd';
 import { InputNumber, Switch, Table } from 'antd';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 import { ComputeBudgetProgram, Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
-import { post } from '../config';
+import { post, socketIo } from '../config';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
 import bs58 from "bs58"
+import { io } from 'socket.io-client';
 
 // Make Buffer available globally in the browser environment
 if (typeof window !== 'undefined') {
@@ -17,36 +18,33 @@ if (typeof window !== 'undefined') {
 
 let countTimer: any;
 
-const dataSource = [
-    {
-        key: '1',
-        name: 'Mike',
-        age: 32,
-        address: '10 Downing Street',
-    },
-    {
-        key: '2',
-        name: 'John',
-        age: 42,
-        address: '10 Downing Street',
-    },
-];
+const dataSource = [];
 
 const columns = [
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        title: 'TempWallet',
+        dataIndex: 'tempWallet',
+        key: 'tempWallet',
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: 'MarketPoolId',
+        dataIndex: 'marketId',
+        key: 'marketId',
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: 'BaseMint',
+        dataIndex: 'baseMint',
+        key: 'baseMint',
+    },
+    {
+        title: 'QuoteMint',
+        dataIndex: 'quoteMint',
+        key: 'quoteMint',
+    },
+    {
+        title: 'TxSig',
+        dataIndex: 'txSig',
+        key: 'txSig',
     },
 ];
 
@@ -59,11 +57,88 @@ const RaydiumSniping = () => {
     const [didAllBuy, setDidAllBuy] = useState(true)
     const [disableProc, setDisableProc] = useState(false)
     const [tokenAddr, setTokenAddr] = useState('')
-    const [buyAmount, setBuyAmount] = useState(0.002)
+    const [buyAmount, setBuyAmount] = useState(0.0025)
+    const [txHistory, setTxHistory] = useState([])
+
+    socketIo.on('message', (message) => {
+        //  @ts-ignore
+        setTxHistory([...txHistory, message])
+        console.log('Message from server : ', message);
+    })
+
+    const onFinish: FormProps['onFinish'] = async (values) => {
+        if (!didAllBuy) if (tokenAddr == "" || tokenAddr == null) {
+            message.error("Input sAddress")
+            return
+        }
+
+        const YOUR_WALLET_KEY = Keypair.generate()
+
+        if (wallet.publicKey == null) {
+            message.error("Connect Wallet")
+        } else {
+            console.log(" +++++++++++++++++++++++++++++++++++++ ")
+
+            //     const transferTransaction = new Transaction()
+            //         .add(
+            //             ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
+            //             ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
+            //         )
+            //     console.log(" +++++++++++++++++++++++++++++++++++++ ")
+
+            //     transferTransaction.add(
+            //         SystemProgram.transfer({
+            //             fromPubkey: wallet.publicKey,
+            //             toPubkey: YOUR_WALLET_KEY.publicKey,
+            //             lamports: buyAmount * 10 ** 9,
+            //         }),
+            //     );
 
 
-    const onFinish: FormProps['onFinish'] = (values) => {
-        console.log('Success:', values);
+            //     message.success(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
+
+            //     console.log(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
+
+            //     const con = connection.connection
+
+            //     console.log(con)
+            //     try {
+            //         transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
+            //         transferTransaction.feePayer = wallet.publicKey
+            //         console.log(await con.simulateTransaction(transferTransaction))
+            //         if (wallet.signTransaction) {
+            //             const signedTx = await wallet.signTransaction(transferTransaction)
+            //             const sTx = signedTx.serialize()
+            //             const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
+
+            //             const blockhash = await con.getLatestBlockhash()
+            //             await con.confirmTransaction({
+            //                 signature,
+            //                 blockhash: blockhash.blockhash,
+            //                 lastValidBlockHeight: blockhash.lastValidBlockHeight
+            //             }, "confirmed");
+            //             console.log("Successfully initialized.\n Signature: ", signature);
+
+            //             setDisableProc(true);
+            //             message.success(`Sent : ${signature}`)
+
+            //         }
+            //     } catch (error) {
+            //         console.log("Error in lock transaction", error)
+            //         return null;
+            //     }
+
+        }
+
+        console.log(YOUR_WALLET_KEY.secretKey.toString())
+
+        const data = await post("/snipingbot/raydium/startbot", {
+            tokenAddr: tokenAddr,
+            buyAmount: buyAmount,
+            tempWalletKey: bs58.encode(YOUR_WALLET_KEY.secretKey)
+        })
+
+        console.log("return value : ", data)
     };
 
     const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
@@ -89,82 +164,6 @@ const RaydiumSniping = () => {
     const onChangeNumber: InputNumberProps['onChange'] = (value) => {
         // @ts-ignore
         setBuyAmount(parseFloat(value))
-    }
-
-    const startProcess = async () => {
-        if (!didAllBuy) if (tokenAddr == "" || tokenAddr == null) {
-            message.error("Input sAddress")
-            return
-        }
-
-        const YOUR_WALLET_KEY = Keypair.generate()
-
-        if (wallet.publicKey == null) {
-            message.error("Connect Wallet")
-        } else {
-            console.log(" +++++++++++++++++++++++++++++++++++++ ")
-
-            const transferTransaction = new Transaction()
-                .add(
-                    ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
-                    ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
-                )
-            console.log(" +++++++++++++++++++++++++++++++++++++ ")
-
-            transferTransaction.add(
-                SystemProgram.transfer({
-                    fromPubkey: wallet.publicKey,
-                    toPubkey: YOUR_WALLET_KEY.publicKey,
-                    lamports: buyAmount * 10 ** 9,
-                }),
-            );
-
-
-            message.success(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
-
-            console.log(`Your temp Wallet : ${YOUR_WALLET_KEY.publicKey.toBase58()}`)
-
-            const con = connection.connection
-
-            console.log(con)
-            try {
-                transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
-                transferTransaction.feePayer = wallet.publicKey
-                console.log(await con.simulateTransaction(transferTransaction))
-                if (wallet.signTransaction) {
-                    const signedTx = await wallet.signTransaction(transferTransaction)
-                    const sTx = signedTx.serialize()
-                    const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
-
-                    const blockhash = await con.getLatestBlockhash()
-                    await con.confirmTransaction({
-                        signature,
-                        blockhash: blockhash.blockhash,
-                        lastValidBlockHeight: blockhash.lastValidBlockHeight
-                    }, "confirmed");
-                    console.log("Successfully initialized.\n Signature: ", signature);
-
-                    setDisableProc(true);
-                    message.success(`Sent : ${signature}`)
-
-                }
-            } catch (error) {
-                console.log("Error in lock transaction", error)
-                return null;
-            }
-
-        }
-
-        console.log(YOUR_WALLET_KEY.secretKey.toString())
-
-        const data = await post("/snipingbot/raydium/startbot", {
-            tokenAddr: tokenAddr,
-            buyAmount: buyAmount,
-            tempWalletKey: bs58.encode(YOUR_WALLET_KEY.secretKey)
-        })
-
-        console.log("return value : ", data)
-
     }
 
     return (
@@ -203,10 +202,10 @@ const RaydiumSniping = () => {
                 >
                     <InputNumber<string>
                         style={{ width: 200 }}
-                        defaultValue="0.002"
-                        min="0.002"
+                        defaultValue="0.0025"
+                        min="0.0025"
                         max="1"
-                        step="0.001"
+                        step="0.0001"
                         onChange={onChangeNumber}
                         stringMode
                     />
@@ -215,13 +214,13 @@ const RaydiumSniping = () => {
 
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit" onClick={startProcess} disabled={disableProc}>
+                    <Button type="primary" htmlType="submit" disabled={disableProc}>
                         Process
                     </Button>
                 </Form.Item>
 
             </Form>
-            <Table dataSource={dataSource} columns={columns} />;
+            <Table dataSource={txHistory.map((ele , idx) => {})} columns={columns} />;
         </>
     )
 }
