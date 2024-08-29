@@ -1,15 +1,12 @@
 
-import React, { ChangeEvent, EventHandler, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import type { FormProps, InputNumberProps } from 'antd';
 import { InputNumber, Switch, Table } from 'antd';
-import { Button, Checkbox, Form, Input, message } from 'antd';
-import { ComputeBudgetProgram, Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+import { Button, Form, Input, message } from 'antd';
+import { PublicKey } from '@solana/web3.js';
 import { post, socketIo } from '../../config';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
-import bs58 from "bs58"
-import { io } from 'socket.io-client';
 import { useSharedContext } from '../../context/SharedContext';
 
 // Make Buffer available globally in the browser environment
@@ -18,8 +15,6 @@ if (typeof window !== 'undefined') {
 }
 
 let countTimer: any;
-
-const dataSource = [];
 
 const columns = [
     {
@@ -52,8 +47,6 @@ const columns = [
 
 const RaydiumSniping = () => {
 
-    const connection = useConnection()
-    const wallet = useWallet();
 
     const [didAllBuy, setDidAllBuy] = useState(true)
     const [disableProc, setDisableProc] = useState(false)
@@ -69,7 +62,7 @@ const RaydiumSniping = () => {
         console.log('Message from server : ', message);
     })
 
-    const onFinish: FormProps['onFinish'] = async (values) => {
+    const onFinish: FormProps['onFinish'] = async () => {
         if (!didAllBuy) if (tokenAddr == "" || tokenAddr == null) {
             message.error("Input TokenAddress")
             return
@@ -81,6 +74,8 @@ const RaydiumSniping = () => {
             buyAmount: buyAmount,
             tempWalletKey: tempWalletSeckey
         })
+
+        setDisableProc(false)
 
         console.log("return value : ", data)
     };
@@ -164,7 +159,11 @@ const RaydiumSniping = () => {
                 </Form.Item>
 
             </Form>
-            <Table dataSource={txHistory.map((ele, idx) => { })} columns={columns} />;
+            <Table dataSource={txHistory.map((ele, idx) => {
+                //  @ts-ignore
+                return { key: idx, ...ele }
+            }
+            )} columns={columns} />;
         </>
     )
 }

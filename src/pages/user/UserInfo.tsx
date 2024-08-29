@@ -1,8 +1,8 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Button, Form, FormProps, Input, InputNumber, InputNumberProps, message } from "antd";
 import { useSharedContext } from "../../context/SharedContext";
-import { useEffect, useState } from "react";
-import { ComputeBudgetProgram, Keypair, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import {  useState } from "react";
+import { ComputeBudgetProgram,  PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 
 const UserInfo = () => {
 
@@ -15,7 +15,7 @@ const UserInfo = () => {
     const wallet = useWallet();
     const [buyAmount, setBuyAmount] = useState(0)
    
-    const onFinish: FormProps['onFinish'] = async (values) => {
+    const onFinish: FormProps['onFinish'] = async (values : any) => {
         
         const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
 
