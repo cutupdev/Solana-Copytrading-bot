@@ -123,7 +123,7 @@ const UserInfo = () => {
                     label="Balance"
                     name="balance"
                 >
-                    <Input disabled style={{ color: "black" }} placeholder={`${balance}`} />
+                    <Input disabled style={{ color: "black" }} placeholder={`${balance} SOL`} />
                 </Form.Item>
 
                 <Form.Item
