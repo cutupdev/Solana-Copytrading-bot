@@ -25,8 +25,6 @@ export default function AppWalletProvider({
     [network],
   );
 
-  console.log(endpoint)
-
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
