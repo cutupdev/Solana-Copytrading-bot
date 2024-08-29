@@ -1,22 +1,23 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Button, Form, FormProps, Input, InputNumber, InputNumberProps, message } from "antd";
 import { useSharedContext } from "../../context/SharedContext";
-import {  useState } from "react";
-import { ComputeBudgetProgram,  PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import { useEffect, useState } from "react";
+import { ComputeBudgetProgram, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 
 const UserInfo = () => {
 
     // @ts-ignore
-    const { sharedValue , setSharedValue } = useSharedContext();
-    const {tempWalletPubkey} = sharedValue;
+    const { sharedValue, setSharedValue } = useSharedContext();
+    const { tempWalletPubkey } = sharedValue;
     const connection = useConnection()
 
-    console.log("UserInfo" , sharedValue)
+    console.log("UserInfo", sharedValue)
     const wallet = useWallet();
     const [buyAmount, setBuyAmount] = useState(0)
-   
+    const [balance, setBalance] = useState(0)
+
     const onFinish: FormProps['onFinish'] = async () => {
-        
+
         const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
 
         if (wallet.publicKey == null) {
@@ -24,56 +25,64 @@ const UserInfo = () => {
         } else {
             console.log(" +++++++++++++++++++++++++++++++++++++ ")
 
-                const transferTransaction = new Transaction()
-                    .add(
-                        ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
-                        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
-                    )
-                console.log(" +++++++++++++++++++++++++++++++++++++ ")
+            const transferTransaction = new Transaction()
+                .add(
+                    ComputeBudgetProgram.setComputeUnitLimit({ units: 100_000 }),
+                    ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 200_000 })
+                )
+            console.log(" +++++++++++++++++++++++++++++++++++++ ")
 
-                transferTransaction.add(
-                    SystemProgram.transfer({
-                        fromPubkey: wallet.publicKey,
-                        toPubkey: TEMP_WALLET_PUBKEY,
-                        lamports: buyAmount * 10 ** 9,
-                    }),
-                );
+            transferTransaction.add(
+                SystemProgram.transfer({
+                    fromPubkey: wallet.publicKey,
+                    toPubkey: TEMP_WALLET_PUBKEY,
+                    lamports: buyAmount * 10 ** 9,
+                }),
+            );
 
 
-                message.success(`Your temp Wallet : ${TEMP_WALLET_PUBKEY.toBase58()}`)
+            message.success(`Your temp Wallet : ${TEMP_WALLET_PUBKEY.toBase58()}`)
 
-                console.log(`Your temp Wallet : ${TEMP_WALLET_PUBKEY.toBase58()}`)
+            console.log(`Your temp Wallet : ${TEMP_WALLET_PUBKEY.toBase58()}`)
 
-                const con = connection.connection
+            const con = connection.connection
 
-                console.log(con)
-                try {
-                    transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
-                    transferTransaction.feePayer = wallet.publicKey
-                    console.log(await con.simulateTransaction(transferTransaction))
-                    if (wallet.signTransaction) {
-                        const signedTx = await wallet.signTransaction(transferTransaction)
-                        const sTx = signedTx.serialize()
-                        const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
+            console.log(con)
+            try {
+                transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
+                transferTransaction.feePayer = wallet.publicKey
+                console.log(await con.simulateTransaction(transferTransaction))
+                if (wallet.signTransaction) {
+                    const signedTx = await wallet.signTransaction(transferTransaction)
+                    const sTx = signedTx.serialize()
+                    const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
 
-                        const blockhash = await con.getLatestBlockhash()
-                        await con.confirmTransaction({
-                            signature,
-                            blockhash: blockhash.blockhash,
-                            lastValidBlockHeight: blockhash.lastValidBlockHeight
-                        }, "confirmed");
-                        console.log("Successfully initialized.\n Signature: ", signature);
+                    const blockhash = await con.getLatestBlockhash()
+                    await con.confirmTransaction({
+                        signature,
+                        blockhash: blockhash.blockhash,
+                        lastValidBlockHeight: blockhash.lastValidBlockHeight
+                    }, "confirmed");
+                    console.log("Successfully initialized.\n Signature: ", signature);
 
-                        message.success(`Sent : ${signature}`)
+                    message.success(`Sent : ${signature}`)
 
-                    }
-                } catch (error) {
-                    console.log("Error in lock transaction", error)
-                    return null;
                 }
+            } catch (error) {
+                console.log("Error in lock transaction", error)
+                return null;
+            }
 
         }
     };
+
+    useEffect(() => {
+        connection.connection.getBalance(new PublicKey(tempWalletPubkey))
+            .then(temp => setBalance(temp))
+
+
+    }, [tempWalletPubkey])
+
 
     const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -102,7 +111,14 @@ const UserInfo = () => {
                     label="Temp Wallet"
                     name="temp_wallet"
                 >
-                    <Input disabled style={{color : "black"}} placeholder={tempWalletPubkey} />
+                    <Input disabled style={{ color: "black" }} placeholder={tempWalletPubkey} />
+                </Form.Item>
+
+                <Form.Item
+                    label="Balance"
+                    name="balance"
+                >
+                    <Input disabled style={{ color: "black" }} placeholder={`${balance}`} />
                 </Form.Item>
 
                 <Form.Item
