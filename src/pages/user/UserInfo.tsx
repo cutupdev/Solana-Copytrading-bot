@@ -72,7 +72,13 @@ const UserInfo = () => {
                 console.log("Error in lock transaction", error)
                 return null;
             }
-
+            try {
+                const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
+                connection.connection.getBalance(TEMP_WALLET_PUBKEY)
+                    .then(temp => setBalance(temp / (10 ** 9)))
+            } catch (error) {
+                setBalance(0)
+            }
         }
     };
 

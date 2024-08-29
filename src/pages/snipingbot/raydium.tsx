@@ -174,18 +174,20 @@ const RaydiumSniping = () => {
                 return {
                     key: idx,
                     //  @ts-ignore
-                    tempWallet: <p style={{cursor : "pointer"}} onClick={() => handleCopyToClipboard(tempWallet)}>{String(tempWallet).slice(0, 9)} ... </p>,
+                    tempWallet: <p style={{ cursor: "pointer" }} onClick={() => handleCopyToClipboard(tempWallet)}>{String(tempWallet).slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    marketId: <p style={{cursor : "pointer"}} onClick={() => handleCopyToClipboard(marketId)}>{String(marketId).slice(0, 9)} ... </p>,
+                    marketId: <p style={{ cursor: "pointer" }} onClick={() => handleCopyToClipboard(marketId)}>{String(marketId).slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    baseMint: <p style={{cursor : "pointer"}} onClick={() => handleCopyToClipboard(baseMint)}>{String(baseMint).slice(0, 9)} ... </p>,
+                    baseMint: <p style={{ cursor: "pointer" }} onClick={() => handleCopyToClipboard(baseMint)}>{String(baseMint).slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    quoteMint: <p style={{cursor : "pointer"}} onClick={() => handleCopyToClipboard(quoteMint)}>{String(quoteMint).slice(0, 9)} ... </p>,
+                    quoteMint: <p style={{ cursor: "pointer" }} onClick={() => handleCopyToClipboard(quoteMint)}>{String(quoteMint).slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    txSig: <p style={{cursor : "pointer"}} onClick={() => handleCopyToClipboard(txSig)}>{String(txSig).slice(0, 9)} ... </p>,
+                    txSig: <p style={{ cursor: "pointer" }} onClick={() => handleCopyToClipboard(txSig)}>{String(txSig).slice(0, 9)} ... </p>,
                 }
             }
-            )} columns={columns} />;
+            )}
+                columns={columns}
+            />
         </>
     )
 }
