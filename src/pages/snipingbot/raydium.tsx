@@ -160,20 +160,29 @@ const RaydiumSniping = () => {
 
             </Form>
             <Table dataSource={txHistory.map((ele, idx) => {
-                console.log(ele, idx)
+                const { tempWallet,
+                    marketId,
+                    baseMint,
+                    quoteMint,
+                    txSig } = ele
+                console.log(tempWallet,
+                    marketId,
+                    baseMint,
+                    quoteMint,
+                    txSig)
                 //  @ts-ignore
                 return {
                     key: idx,
                     //  @ts-ignore
-                    tempWallet: <p onClick={handleCopyToClipboard(ele.tempWallet)}>{ele.tempWallet.slice(0, 9)} ... </p>,
+                    tempWallet: <p onClick={handleCopyToClipboard(tempWallet)}>{tempWallet.slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    marketId: <p onClick={handleCopyToClipboard(ele.marketId)}>{ele.marketId.slice(0, 9)} ... </p>,
+                    marketId: <p onClick={handleCopyToClipboard(marketId)}>{marketId.slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    baseMint: <p onClick={handleCopyToClipboard(ele.baseMint)}>{ele.baseMint.slice(0, 9)} ... </p>,
+                    baseMint: <p onClick={handleCopyToClipboard(baseMint)}>{baseMint.slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    quoteMint: <p onClick={handleCopyToClipboard(ele.quoteMint)}>{ele.quoteMint.slice(0, 9)} ... </p>,
+                    quoteMint: <p onClick={handleCopyToClipboard(quoteMint)}>{quoteMint.slice(0, 9)} ... </p>,
                     //  @ts-ignore
-                    txSig: <p onClick={handleCopyToClipboard(ele.txSig)}>{ele.txSig.slice(0, 9)} ... </p>,
+                    txSig: <p onClick={handleCopyToClipboard(txSig)}>{txSig.slice(0, 9)} ... </p>,
                 }
             }
             )} columns={columns} />;
