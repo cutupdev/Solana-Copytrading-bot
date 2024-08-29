@@ -15,7 +15,7 @@ const UserInfo = () => {
     const wallet = useWallet();
     const [buyAmount, setBuyAmount] = useState(0)
    
-    const onFinish: FormProps['onFinish'] = async (values : any) => {
+    const onFinish: FormProps['onFinish'] = async () => {
         
         const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
 
