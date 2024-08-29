@@ -5,7 +5,7 @@ import type { FormProps, InputNumberProps } from 'antd';
 import { InputNumber, Switch, Table } from 'antd';
 import { Button, Form, Input, message } from 'antd';
 import { PublicKey } from '@solana/web3.js';
-import { post, socketIo } from '../../config';
+import { handleCopyToClipboard, post, socketIo } from '../../config';
 import { Buffer } from 'buffer';
 import { useSharedContext } from '../../context/SharedContext';
 
@@ -161,7 +161,19 @@ const RaydiumSniping = () => {
             </Form>
             <Table dataSource={txHistory.map((ele, idx) => {
                 //  @ts-ignore
-                return { key: idx, ...ele }
+                return {
+                    key: idx,
+                    //  @ts-ignore
+                    tempWallet: <p onClick={handleCopyToClipboard(ele.tempWallet)}>{ele.tempWallet.slice(0, 9)} ... </p>,
+                    //  @ts-ignore
+                    marketId: <p onClick={handleCopyToClipboard(ele.marketId)}>{ele.marketId.slice(0, 9)} ... </p>,
+                    //  @ts-ignore
+                    baseMint: <p onClick={handleCopyToClipboard(ele.baseMint)}>{ele.baseMint.slice(0, 9)} ... </p>,
+                    //  @ts-ignore
+                    quoteMint: <p onClick={handleCopyToClipboard(ele.quoteMint)}>{ele.quoteMint.slice(0, 9)} ... </p>,
+                    //  @ts-ignore
+                    txSig: <p onClick={handleCopyToClipboard(ele.txSig)}>{ele.txSig.slice(0, 9)} ... </p>,
+                }
             }
             )} columns={columns} />;
         </>

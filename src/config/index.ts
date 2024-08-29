@@ -1,5 +1,12 @@
 import axios from 'axios'
 import { io } from 'socket.io-client'
+import * as clipboard from 'clipboard-polyfill';
+import { message } from 'antd';
+
+const handleCopyToClipboard = (address: any) => {
+  clipboard.writeText(address);
+  message.success(address);
+};
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const RPC = import.meta.env.VITE_MAIN_RPC
@@ -20,5 +27,6 @@ export {
     post,
     get,
     RPC,
-    socketIo
+    socketIo,
+    handleCopyToClipboard
 }
