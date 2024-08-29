@@ -77,9 +77,13 @@ const UserInfo = () => {
     };
 
     useEffect(() => {
-        const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
-        connection.connection.getBalance(TEMP_WALLET_PUBKEY)
-            .then(temp => setBalance(temp))
+        try {
+            const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
+            connection.connection.getBalance(TEMP_WALLET_PUBKEY)
+                .then(temp => setBalance(temp / (10 ** 9)))
+        } catch (error) {
+            setBalance(0)
+        }
 
 
     }, [tempWalletPubkey])
