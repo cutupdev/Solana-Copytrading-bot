@@ -77,7 +77,8 @@ const UserInfo = () => {
     };
 
     useEffect(() => {
-        connection.connection.getBalance(new PublicKey(tempWalletPubkey))
+        const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
+        connection.connection.getBalance(TEMP_WALLET_PUBKEY)
             .then(temp => setBalance(temp))
 
 
