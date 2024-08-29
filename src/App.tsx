@@ -2,7 +2,7 @@ import React from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import {  Layout, Menu, theme } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import HeaderComponents from './components/Header';
 // import Header from './components/Header'
 
@@ -26,17 +26,11 @@ const items2: MenuProps['items'] = [
     children: [
       {
         key: 1,
-        label: "Raydium",
-        onClick: () => {
-          window.location.href = '/snipingbot/raydium'
-        }
+        label: <Link to="/snipingbot/raydium">Raydium</Link>,
       },
       {
         key: 2,
-        label: "Pumpfun",
-        onClick: () => {
-          window.location.href = '/snipingbot/pumpfun'
-        }
+        label: <Link to="/snipingbot/pumpfun">Pumpfun</Link>,
       },
     ],
   },
@@ -48,10 +42,7 @@ const items2: MenuProps['items'] = [
     children: [
       {
         key: 4,
-        label: "Raydium",
-        onClick: () => {
-          window.location.href = '/volumebot/raydium'
-        }
+        label: <Link to="/volumebot/raydium">Raydium</Link>,
       }
     ],
   },
@@ -63,20 +54,14 @@ const items2: MenuProps['items'] = [
     children: [
       {
         key: 6,
-        label: "Raydium",
-        onClick: () => {
-          window.location.href = '/copytrading/raydium'
-        }
+        label:  <Link to="/copytrading/raydium">Raydium</Link>
       }
     ],
   },
   {
     key: 7,
     icon: <UserOutlined />,
-    label: "User Info",
-    onClick: () => {
-      window.location.href = '/userinfo'
-    }
+    label: <Link to="/userinfo">User Info</Link>,
   },
 ]
 
