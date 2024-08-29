@@ -4,7 +4,6 @@ import type { MenuProps } from 'antd';
 import {  Layout, Menu, theme } from 'antd';
 import { Outlet } from 'react-router-dom';
 import HeaderComponents from './components/Header';
-import { SharedProvider } from './context/SharedContext';
 // import Header from './components/Header'
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -87,7 +86,6 @@ const App: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <SharedProvider>
 
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
@@ -115,9 +113,9 @@ const App: React.FC = () => {
                 items={items2}
               />
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>{
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Outlet />
-            }</Content>
+            </Content>
           </Layout>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
@@ -125,7 +123,6 @@ const App: React.FC = () => {
         </Footer>
       </Layout>
 
-    </SharedProvider>
   );
 };
 

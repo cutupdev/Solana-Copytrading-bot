@@ -10,6 +10,7 @@ import RaydiumVolume from './pages/volumebot/raydium.tsx';
 import RaydiumCopytrading from './pages/copytrading/raydium.tsx';
 import Welcome from './pages/readme/index.tsx';
 import UserInfo from './pages/user/UserInfo.tsx';
+import { SharedProvider } from './context/SharedContext.tsx';
 
 const router = createBrowserRouter([
   {
@@ -47,7 +48,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AppWalletProvider>
+      <SharedProvider>
         <RouterProvider router={router} />
+      </SharedProvider>
     </AppWalletProvider>
   </React.StrictMode>
 )
