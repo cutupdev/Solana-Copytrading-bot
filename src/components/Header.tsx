@@ -6,6 +6,7 @@ import { post } from "../config";
 import { Keypair } from "@solana/web3.js";
 import { useSharedContext } from "../context/SharedContext";
 import bs58 from "bs58"
+import { Link } from "react-router-dom";
 
 const HeaderComponents = () => {
 
@@ -51,9 +52,7 @@ const HeaderComponents = () => {
 
     return (
         <>
-            <a href="/">
-                <h1>Bot Pad</h1>
-            </a>
+            <Link to="/"><h1>Bot Pad</h1></Link>
 
             <div>
                 <Input placeholder="Your Temp Wallet Address" style={{ width: "370px", marginRight: "25px", color: "white" }} disabled value={tempWalletPubkey} />
