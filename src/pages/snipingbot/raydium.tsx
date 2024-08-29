@@ -160,6 +160,7 @@ const RaydiumSniping = () => {
 
             </Form>
             <Table dataSource={txHistory.map((ele, idx) => {
+                console.log(ele, idx)
                 //  @ts-ignore
                 return {
                     key: idx,
