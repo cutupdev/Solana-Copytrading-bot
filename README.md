@@ -1,50 +1,93 @@
-# React + TypeScript + Vite
+# Bot-Pad
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the bundle project of Solana Trading Bots running on several Solana Dex Platform such as Pumpfun and Raydium.
+This Bot consists of various Trading Bot like Sniping Bot and Volume Bot , Copytrading Bot ...
 
-Currently, two official plugins are available:
+In this bot , I focus on two things:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- To Prevent Scamming : I know my people feel hesitating the usage of Bot.
+In this bot , You use your temporary wallet which is used in Bot-Pad.
+You can deposit your sol to this temp wallet as much as you want.
+Deposit little Sol to temp wallet as little as you can run this bot once.
+    
+- High Quality : There are many aspects that determine the high quality. RPC and Code quality.
+If you use custom RPC , you can speed up the Bot quality. 
 
-## Expanding the ESLint configuration
+### Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Sniping Bot ( Raydium , Pumpfun )
 
-- Configure the top-level `parserOptions` property like this:
+- Volume Bot ( Raydium )
+
+- Copytrading Bot ( Raydium )
+
+- User Info
+
+# Contact
+
+- You can easily find me in [Discord](https://discordapp.com/users/471524111512764447) , [Telegram](https://t.me/soIkeen) , [X.com](https://x.com/solkeen) , [Live URL](https://bot-pad-frontend.vercel.app/)
+
+### What can you do in this project
+- This is not commerical site , this is for solana learners who are willing to develop solana bot.
+- If you wanna have solana trading bot , I can customize it for your requirement.
+
+#### Version Info
+- v_1 : Raydium Sniping Bot
+- v_2 : Raydium Volume Bot
+
+
+## Code Explanation
+
+Deposit Part to temp wallet:
+
+- Sol Deposit Part with  `web3`
 
 ```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+
+const UserInfo = () => {
+  ...
+    try {
+        transferTransaction.recentBlockhash = (await con.getLatestBlockhash()).blockhash
+        transferTransaction.feePayer = wallet.publicKey
+        if (wallet.signTransaction) {
+            const signedTx = await wallet.signTransaction(transferTransaction)
+            const sTx = signedTx.serialize()
+            const signature = await con.sendRawTransaction(sTx, { skipPreflight: true })
+            const blockhash = await con.getLatestBlockhash()
+            await con.confirmTransaction({
+                signature,
+                blockhash: blockhash.blockhash,
+                lastValidBlockHeight: blockhash.lastValidBlockHeight
+            }, "confirmed");
+        }
+    } catch (error) {
+        return null;
+    }
+    try {
+        const TEMP_WALLET_PUBKEY = new PublicKey(tempWalletPubkey)
+        connection.connection.getBalance(TEMP_WALLET_PUBKEY)
+            .then(temp => setBalance(temp / (10 ** 9)))
+    } catch (error) {
+        setBalance(0)
+    }
+ ...
+};
+
 ```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Raydium Sniping bot:
+- Interacting Part with  `/snipingbot/raydium/startbot`
 
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+const RaydiumSniping = () => {
+  ...
+  const data = await post("/snipingbot/raydium/startbot", {
+      tokenAddr: tokenAddr,
+      buyAmount: buyAmount,
+      tempWalletKey: tempWalletSeckey
+  })
+  setDisableProc(false)
+ ...
+};
+
 ```
