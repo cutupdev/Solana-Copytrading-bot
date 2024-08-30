@@ -1,4 +1,4 @@
-# Bot-Pad
+# Bot-Pad v_1
 
 This is the bundle project of Solana Trading Bots running on several Solana Dex Platform such as Pumpfun and Raydium.
 This Bot consists of various Trading Bot like Sniping Bot and Volume Bot , Copytrading Bot ...
@@ -11,18 +11,20 @@ You can deposit your sol to this temp wallet as much as you want.
 Deposit little Sol to temp wallet as little as you can run this bot once.
     
 - High Quality : There are many aspects that determine the high quality. RPC and Code quality.
-If you use custom RPC , you can speed up the Bot quality. 
+If you use custom RPC , you can speed up the Bot quality.
+
+- I'm not frontend Dev and sorry for poor UI, I used to develop node , telegram bot.
 
 ### Structure
 
 - Sniping Bot ( Raydium , Pumpfun )
-
+![Screenshot_1](https://github.com/user-attachments/assets/0bf18a48-99c8-4a86-bf8b-8c8825ba4406)
 - Volume Bot ( Raydium )
 
 - Copytrading Bot ( Raydium )
 
 - User Info
-
+![Screenshot_2](https://github.com/user-attachments/assets/f29b5154-67de-4f52-ba28-c5e7f7b18236)
 # Contact
 
 - You can easily find me in [Discord](https://discordapp.com/users/471524111512764447) , [Telegram](https://t.me/soIkeen) , [X.com](https://x.com/solkeen) , [Live URL](https://bot-pad-frontend.vercel.app/)
