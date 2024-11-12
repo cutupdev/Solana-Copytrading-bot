@@ -1,6 +1,6 @@
 # Solana Copytrading Bot
 
-This is copytrading bot running on several solana dex platform - raydium, meteora, pumpfun.
+This is copy trading bot running on several solana dex platform - raydium, meteora, pumpfun.
 This is basic version, not full version.
 In this bot, it track the profitable bots fast and copytrack it.
 If you want, I can offer full version and can develop customized advanced project.
