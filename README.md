@@ -31,3 +31,9 @@ https://solscan.io/tx/4ciUpbved6zjXxSRqnkhY4TeZvzsUVrJb4wdcWLAppJftwgNfMB8dFVHPP
 In copy trading bot, there are two main things: 
 one is fetching target wallet transaction and other one is copying target wallet transaction.
 In the basic version, fetching target wallet tx is done by rpc websocket (300-500ms) but with the advanced version, I am using grpc for target wallet tx fetching, and it takes only 50-100ms.  Also in most of copy bots, they are using jupiter for swapping to copy target wallet transactions. Jupiter is good aggregator that is supporting swap, but it causes time latency. So with my new solution, I usually swap on dexs directly. If target wallet swap token on raydium pool, then my bot swap on raydium directly and it reduces latency absolutely. Of course, it needs more development time because it needs to interact several dexs directly, but otherwise using jupiter is too easy for development and understanding.
+
+
+### Contact Information
+- Telegram: https://t.me/DevCutup
+- Whatsapp: https://wa.me/13137423660
+- Twitter: https://x.com/devcutup
